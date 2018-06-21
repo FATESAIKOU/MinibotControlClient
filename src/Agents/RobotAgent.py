@@ -10,7 +10,9 @@ import json
 
 class RobotAgent:
     def __init__( self, api_url ):
+        self.is_constructed = False
         self.SetUrl(api_url)
+
 
     """ Initialization """
     def GetUrl( self ):
@@ -22,20 +24,21 @@ class RobotAgent:
             self.CheckResponse(robot_resp)
 
             self.__api_url = api_url
-            self.__robot_status = json.loads(robot_resp.content)
+            self.robot_status = json.loads(robot_resp.content)
+            self.is_constructed = True
         except Exception as e:
             print('Unable to set url as "' + api_url + '"\n' + str(e))
 
 
     """ Get Status """
     def GetStatus( self, fresh = False ):
-        if fresh or not hasattr(self, '__robot_status'):
+        if fresh or not hasattr(self, 'robot_status'):
             robot_resp = requests.get( self.__api_url )
             self.CheckResponse(robot_resp)
 
-            self.__robot_status = json.loads(robot_resp.content)
+            self.robot_status = json.loads(robot_resp.content)
         
-        return self.__robot_status
+        return self.robot_status
 
 
     """ Exec """
@@ -43,10 +46,9 @@ class RobotAgent:
         robot_resp = requests.put(self.__api_url, json=['Robot', action, args])
         self.CheckResponse(robot_resp)
 
-        self.__robot_status = json.loads(robot_resp.content)
+        self.robot_status = json.loads(robot_resp.content)
 
-        return self.__robot_status
-        
+        return self.robot_status
 
 
     """ Utils """
