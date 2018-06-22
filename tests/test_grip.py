@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import json
 import sys
 
 sys.path.insert(0, '../src')
@@ -26,18 +27,20 @@ def main():
     GetRobotReady(robot_agent)
 
     for i in range(1000):
-        print('Round: ' + str(i))
-        pprint(robot_agent.GetStatus())
-        robot_agent.Exec('AcsPTP', [0, 90, 0, 0, -90, -75])
+        status_str = json.dumps(robot_agent.GetStatus()['status'])
+        print('Round: ' + str(i) + ' Status: ' + status_str)
+        robot_agent.Exec('AcsPTP', [0, 90, 0, -45, -90, -75])
         robot_agent.Exec('Release')
         robot_agent.Exec('Wait', 576, 100)
         robot_agent.Exec('WaitGripper', 100)
 
-        robot_agent.Exec('AcsPTP', [0, 90, 0, 0, -90, 45])
+        robot_agent.Exec('AcsPTP', [0, 90, 0, 45, -90, 45])
         robot_agent.Exec('Grip', 40, 20)
         robot_agent.Exec('Wait', 576, 100)
         robot_agent.Exec('WaitGripper', 100)
 
+    robot_agent.Exec('AcsPTP', [0, 90, 0, 0, -90, -15])
+    robot_agent.Exec('Wait', 576, 100)
     robot_agent.Exec('Disable')
 
 
