@@ -59,7 +59,6 @@ class CameraAgent:
 
         byte_str = base64.b64decode( tmp_obj['image_b64'] )
         image = Image.open(io.BytesIO( byte_str ))
-        image.save('wtf.png')
         image_data = np.array(image)
 
         return {'image': image_data}
